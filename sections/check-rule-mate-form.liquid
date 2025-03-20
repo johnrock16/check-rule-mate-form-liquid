@@ -1,0 +1,212 @@
+<form id="section-{{ section.id }}" class="check-rule-mate-form" data-breakpoint-md="{{ section.settings.form_breakpoint_md }}" data-breakpoint-lg="{{ section.settings.form_breakpoint_lg }}" data-rules-form='{{ section.settings.form_rule.rules }}' data-rules-crmf='{{ section.settings.form_crmf_rules.rules}}' data-errors-messages='{{ section.settings.form_crmf_errors.errors }}'>
+  {{ section.settings.form_title }}
+  <div class="crmf-fields">
+    {% for block in section.blocks %}
+      {% case block.type %}
+        {% when 'field_group' %}
+          <div class="crmf-field-group">
+            <span>{{ block.settings.field_group_title }}</span>
+          </div>
+        {% when 'field' %}
+          <div class="crmf-field">
+            {% case block.settings.field_type %}
+              {% when 'input' %}
+                <label for="{{ block.settings.field_name }}">
+                  {{ block.settings.field_label }}
+                  {% case block.settings.field_required %}
+                    {% when false %}
+                      <span>(Optional)</span>
+                  {% endcase %}
+                </label>
+                <input
+                  id="crmf-input-{{ block.settings.field_name }}"
+                  name="{{ block.settings.field_name }}"
+                  type="{{ block.settings.field_content_type }}"
+                  placeholder="{{ block.settings.field_placeholder }}"
+                  autocomplete="{{ block.settings.field_name }}"
+                  data-rule="{{ block.settings.field_rule }}"
+                  data-field-width="{{ block.settings.field_width }}"
+                  data-field-width-md="{{ block.settings.field_width_md }}"
+                  data-field-width-lg="{{ block.settings.field_width_lg }}"
+                  {% if block.settings.field_required %}
+                    required="{{ block.settings.field_required }}"
+                  {% endif %}
+                />
+            {% endcase %}
+          </div>
+      {% endcase %}
+    {% endfor %}
+  </div>
+  <button class="crmf-button-submit" type="submit">{{ section.settings.form_button_submit_label }}</button>
+</form>
+<link rel="stylesheet" href="{{ 'check-rule-mate-form.css' | asset_url }}" media="print" onload="this.media='all'">
+<script defer src="{{ 'check-rule-mate-form-helpers.js' | asset_url }}"></script>
+<script defer src="{{ 'check-rule-mate-form.js' | asset_url }}"></script>
+
+{% schema %}
+{
+  "name": "check-rule-mate-form",
+  "tag": "section",
+  "class": "section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "presets": [
+    {
+      "name": "check-rule-mate-form"
+    }
+  ],
+  "settings": [
+    {
+      "type": "metaobject",
+      "id": "form_crmf_rules",
+      "label": "Check-rule-mate-form rules",
+      "metaobject_type": "check_rule_mate_form_rules"
+    },
+    {
+      "type": "metaobject",
+      "id": "form_crmf_errors",
+      "label": "Check-rule-mate-form errors",
+      "metaobject_type": "check_rule_mate_form_errors"
+    },
+    {
+      "type": "metaobject",
+      "id": "form_rule",
+      "label": "Form rule",
+      "metaobject_type": "form_rules"
+    },
+    {
+      "type": "text",
+      "id": "form_title",
+      "label": "Form title"
+    },
+    {
+      "type": "text",
+      "id": "Form_subtitle",
+      "label": "Form subtittle",
+    },
+    {
+      "type": "text",
+      "id": "form_button_submit_label",
+      "label": "Form submit button text",
+      "default": "Submit"
+    },
+    {
+      "type": "number",
+      "id": "form_breakpoint_md",
+      "label": "Form Breakpoint for tablets (px)"
+    },
+    {
+      "type": "number",
+      "id": "form_breakpoint_lg",
+      "label": "Form Breakpoint for desktops (px)"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "field",
+      "name": "Form field",
+      "settings": [
+        {
+          "type": "select",
+          "id": "field_type",
+          "label": "Field type",
+          "default": "input",
+          "options": [
+            { "value": "input", "label": "input" },
+            { "value": "select", "label": "select" },
+            { "value": "textarea", "label": "textarea" },
+            { "value": "checkbox", "label": "checkbox" },
+          ]
+        },
+        {
+          "type": "checkbox",
+          "id": "field_required",
+          "label": "Required field?"
+        },
+        {
+          "type": "text",
+          "id": "field_label",
+          "label": "Label"
+        },
+        {
+          "type": "text",
+          "id": "field_name",
+          "label": "Field name"
+        },
+        {
+          "type": "text",
+          "id": "field_placeholder",
+          "label": "Placeholder"
+        },
+        {
+          "type": "text",
+          "id": "field_content_type",
+          "label": "Field content type",
+          "default": "text"
+        },
+        {
+          "type": "text",
+          "id": "field_rule",
+          "label": "Field validation ruie",
+          "default": "hasText"
+        },
+        {
+          "type": "text",
+          "id": "field_customer",
+          "label": "Auto fill with customer data"
+        },
+        {
+          "type": "text",
+          "id": "field_mask",
+          "label": "Field mask"
+        },
+        {
+          "type": "text",
+          "id": "field_width",
+          "label": "Field width",
+          "default": "100%"
+        },
+        {
+          "type": "text",
+          "id": "field_width_md",
+          "label": "Field width (Tablet)",
+          "default": "100%"
+        },
+        {
+          "type": "text",
+          "id": "field_width_lg",
+          "label": "Field width (Desktop)",
+          "default": "100%"
+        },
+        {
+          "type": "text",
+          "id": "field_select_default_option",
+          "label": "The default option for select fields (only select fields)"
+        },
+        {
+          "type": "text",
+          "id": "field_checkbox_label",
+          "label": "Checkbox label (only checkboxes)"
+        }
+      ]
+    },
+    {
+      "type": "field_group",
+      "name": "Field group",
+      "settings": [
+        {
+          "type": "text",
+          "id": "field_group_title",
+          "label": "title"
+        },
+        {
+          "type": "checkbox",
+          "id": "field_group_margin",
+          "label": "field group with margin?"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

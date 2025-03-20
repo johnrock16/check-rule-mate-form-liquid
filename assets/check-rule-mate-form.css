@@ -1,0 +1,43 @@
+.check-rule-mate-form {
+    width: 100%;
+    padding: 0 16px;
+    margin: 0 auto;
+}
+
+.crmf-fields {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    max-width: 100%;
+    gap: 16px;
+}
+
+.crmf-field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    width: 100%;
+}
+
+.crmf-field input {
+    min-height: 48px;
+    padding: 8px;
+    border: 1px solid black;
+}
+
+.crmf-field-group {
+    display: flex;
+    width: 100%;
+}
+
+.crmf-button-submit {
+    min-width: 120px;
+    min-height: 48px;
+    margin-top: 24px;
+    padding: 4px 16px;
+    color: white;
+    font-size: 2.0rem;
+    font-weight: 500;
+    background-color: black;
+    cursor: pointer;
+}
