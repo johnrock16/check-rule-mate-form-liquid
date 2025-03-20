@@ -130,4 +130,4 @@ By integrating **check-rule-mate-form** and **check-rule-mate** into your Shopif
 
 ## License
 
-This project is licensed under the **ISC License** - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the **ISC License**.
