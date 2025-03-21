@@ -8,11 +8,15 @@ document.addEventListener('DOMContentLoaded', function() {
     const BREAKPOINT_MD = formElement.dataset.breakpointMd;
     const BREAKPOINT_LG = formElement.dataset.breakpointLg;
     const breakpoints = {md: BREAKPOINT_MD, lg: BREAKPOINT_LG};
-
+    const mask = new Mask(RULES);
     const formManaager = new FormManager(formElement, FORM_RULES, RULES, myValidator, ERRORS_MESSAGES);
     formManaager.addAttributes();
-
-    formInputs.forEach((formInput) => formInput.addEventListener('change', formManaager.handleInputChange));
+    formInputs.forEach((formInput) => {
+      formInput.addEventListener('change', formManaager.handleInputChange)
+      if(RULES[formInput.dataset.rule]?.mask) {
+        formInput.addEventListener('keyup', mask.handleKeyUp)
+      }
+    });
     formElement.addEventListener('reset', formManaager.handleFormReset);
     formElement.addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -47,8 +51,25 @@ function handleFieldsResize(formInputs, breakpoints) {
   })
 }
 
+function Mask(RULES) {
+  function generateTextWithMask(value, maskArray) {
+    let textMasked = value;
+    maskArray.forEach((mask) => {
+      textMasked = textMasked.replace(new RegExp(mask[0]), mask[1]);
+    });
+    return textMasked;
+  }
 
+  function handleKeyUp(e) {
+    setTimeout(()=> {
+      e.target.value = generateTextWithMask(e.target.value, RULES[e.target.dataset.rule].mask);
+    }, 400);
+  }
 
+  return ({
+    handleKeyUp: handleKeyUp
+  })
+}
 
 // check-rule-mate
 function dataValidate(c,{validationHelpers:f={},rules:d,dataRule:o,dataErrorMessages:y={}}){let p={};function g(e,i){if(!e||typeof i!="string")return;let n=i.split("."),t=e;for(let a of n){if(t[a]===void 0)return;t=t[a]}return t}async function s(e,i=null){let{rule:n,required:t}=o[e.key];if((n&&t||!t&&e.value!="")&&n){let a=n.split("--")[0],r=n.split("--").length>1?n.split("--")[1]:"",h=k(e.value,d[a],r,f,i),{isValid:u,errorMessage:m,errorType:v}=await h.validate();return u||(p[e.key]={name:e.key,error:!0,errorMessage:g(y,m)||m,errorType:v}),u}return!0}async function l(){let e=Object.keys(c).map(i=>({key:i,value:c[i]}));if(e&&e.length>0){if(!Object.keys(o).every(r=>c.hasOwnProperty(r)))return{error:!0,errorMessage:"Missing properties"};if((await Promise.all([...e].map(async r=>await s(r,c)))).some(r=>!r))return{error:!0,dataErrors:p};let n=Object.keys(o).map(r=>({key:r,required:o[r].required})),t=e.map(r=>r.key);if(!n.filter(r=>r.required).map(r=>r.key).every(r=>t.includes(r)))return{error:!0}}else if(!e||e.length===0)return{error:!0,errorMessage:"Missing fields for dataRules"};return{ok:!0}}return l()}function k(c,f,d=null,o=null,y=null){async function p(s){let l,e;return{isValid:!(await Promise.all(s.validate.map(async t=>{let a=!0;if(s.params&&s.params[t]&&s.params[t].length>0){let r=s.params[t].map(u=>typeof u=="string"&&u[0]==="$"?u.substring(1,u.length):u);a=await this[t](...r)}else a=await this[t]();return!a&&!l&&s?.error[t]&&(l=s.error[t],e=t),a}))).some(t=>!t),errorMessage:l,errorType:e}}async function g(){if(o&&typeof o=="function"){let l=o(c,f,d,y);Object.keys(l).forEach(e=>{this[e]=l[e]})}return d?await p.call(this,f.modifier[d]):await p.call(this,f)}return{validate:g}}

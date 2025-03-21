@@ -25,9 +25,13 @@
                   placeholder="{{ block.settings.field_placeholder }}"
                   autocomplete="{{ block.settings.field_name }}"
                   data-rule="{{ block.settings.field_rule }}"
+                  data-mask="{{ block.settings.field_mask }}"
                   data-field-width="{{ block.settings.field_width }}"
                   data-field-width-md="{{ block.settings.field_width_md }}"
                   data-field-width-lg="{{ block.settings.field_width_lg }}"
+                  {% if block.settings.field_input_mode != 'none' %}
+                    inputmode="{{ block.settings.field_input_mode }}"
+                  {% endif %}
                   {% if block.settings.field_required %}
                     required="{{ block.settings.field_required }}"
                   {% endif %}
@@ -50,11 +54,13 @@
                   data-field-width="{{ block.settings.field_width }}"
                   data-field-width-md="{{ block.settings.field_width_md }}"
                   data-field-width-lg="{{ block.settings.field_width_lg }}"
+                  {% if block.settings.field_input_mode != 'none' %}
+                    inputmode="{{ block.settings.field_input_mode }}"
+                  {% endif %}
                   {% if block.settings.field_required %}
                     required="{{ block.settings.field_required }}"
                   {% endif %}
-                >
-                </textarea>
+                ></textarea>
               {% when 'select' %}
                 <label for="{{ block.settings.field_name }}">
                   {{ block.settings.field_label }}
@@ -195,10 +201,32 @@
           "label": "Placeholder"
         },
         {
-          "type": "text",
+          "type": "select",
           "id": "field_content_type",
           "label": "Field content type",
-          "default": "text"
+          "default": "text",
+          "options": [
+            { "value": "text", "label": "text" },
+            { "value": "checkbox", "label": "checkbox" },
+            { "value": "color", "label": "color" },
+            { "value": "date", "label": "date" },
+            { "value": "datetime-local", "label": "datetime-local" },
+            { "value": "email", "label": "email" },
+            { "value": "file", "label": "file" },
+            { "value": "hidden", "label": "hidden" },
+            { "value": "image", "label": "image" },
+            { "value": "month", "label": "month" },
+            { "value": "number", "label": "number" },
+            { "value": "password", "label": "password" },
+            { "value": "radio", "label": "radio" },
+            { "value": "range", "label": "range" },
+            { "value": "search", "label": "search" },
+            { "value": "submit", "label": "submit" },
+            { "value": "tel", "label": "tel" },
+            { "value": "time", "label": "time" },
+            { "value": "url", "label": "url" },
+            { "value": "week", "label": "week" },
+          ]
         },
         {
           "type": "text",
@@ -215,6 +243,22 @@
           "type": "text",
           "id": "field_mask",
           "label": "Field mask"
+        },
+        {
+          "type": "select",
+          "id": "field_input_mode",
+          "label": "Field input mode",
+          "default": "none",
+          "options": [
+            { "value": "none", "label": "none" },
+            { "value": "text", "label": "text" },
+            { "value": "decimal", "label": "decimal" },
+            { "value": "numeric", "label": "numeric" },
+            { "value": "tel", "label": "tel" },
+            { "value": "search", "label": "search" },
+            { "value": "email", "label": "email" },
+            { "value": "url", "label": "url" }
+          ]
         },
         {
           "type": "text",
