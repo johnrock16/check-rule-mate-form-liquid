@@ -1,30 +1,32 @@
 document.addEventListener('DOMContentLoaded', function() {
-  const formElement = document.querySelectorAll('.check-rule-mate-form')[0];
-  const formInputs = formElement.querySelectorAll('input');
-  const FORM_RULES = JSON.parse(formElement.dataset.rulesForm);
-  const RULES = JSON.parse(formElement.dataset.rulesCrmf);
-  const ERRORS_MESSAGES = JSON.parse(formElement.dataset.errorsMessages);
-  const BREAKPOINT_MD = formElement.dataset.breakpointMd;
-  const BREAKPOINT_LG = formElement.dataset.breakpointLg;
-  const breakpoints = {md: BREAKPOINT_MD, lg: BREAKPOINT_LG};
+  const formElements = document.querySelectorAll('.check-rule-mate-form');
+  formElements.forEach((formElement) => {
+    const formInputs = formElement.querySelectorAll('input, textarea, select');
+    const FORM_RULES = JSON.parse(formElement.dataset.rulesForm);
+    const RULES = JSON.parse(formElement.dataset.rulesCrmf);
+    const ERRORS_MESSAGES = JSON.parse(formElement.dataset.errorsMessages);
+    const BREAKPOINT_MD = formElement.dataset.breakpointMd;
+    const BREAKPOINT_LG = formElement.dataset.breakpointLg;
+    const breakpoints = {md: BREAKPOINT_MD, lg: BREAKPOINT_LG};
 
-  const formManaager = new FormManager(formElement, FORM_RULES, RULES, myValidator, ERRORS_MESSAGES);
-  formManaager.addAttributes();
+    const formManaager = new FormManager(formElement, FORM_RULES, RULES, myValidator, ERRORS_MESSAGES);
+    formManaager.addAttributes();
 
-  formInputs.forEach((formInput) => formInput.addEventListener('change', formManaager.handleInputChange));
-  formElement.addEventListener('reset', formManaager.handleFormReset);
-  formElement.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const formValidated = await formManaager.handleFormSubmit(e);
-    console.log(formValidated);
-    if (formValidated.error) {
-      alert('form is invalid')
-    } else if (formValidated.ok) {
-      alert('form is valid')
-    }
+    formInputs.forEach((formInput) => formInput.addEventListener('change', formManaager.handleInputChange));
+    formElement.addEventListener('reset', formManaager.handleFormReset);
+    formElement.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formValidated = await formManaager.handleFormSubmit(e);
+      console.log(formValidated);
+      if (formValidated.error) {
+        alert('form is invalid')
+      } else if (formValidated.ok) {
+        alert('form is valid')
+      }
+    });
+    window.addEventListener('resize', () => { handleFieldsResize(formInputs, breakpoints) });
+    handleFieldsResize(formInputs, breakpoints);
   });
-  window.addEventListener('resize', () => { handleFieldsResize(formInputs, breakpoints) });
-  handleFieldsResize(formInputs, breakpoints);
 });
 
 function handleFieldsResize(formInputs, breakpoints) {

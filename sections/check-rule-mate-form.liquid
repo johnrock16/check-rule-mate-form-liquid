@@ -32,6 +32,61 @@
                     required="{{ block.settings.field_required }}"
                   {% endif %}
                 />
+              {% when 'textarea' %}
+                <label for="{{ block.settings.field_name }}">
+                  {{ block.settings.field_label }}
+                  {% case block.settings.field_required %}
+                    {% when false %}
+                      <span>(Optional)</span>
+                  {% endcase %}
+                </label>
+                <textarea
+                  id="crmf-textarea-{{ block.settings.field_name }}"
+                  name="{{ block.settings.field_name }}"
+                  type="{{ block.settings.field_content_type }}"
+                  placeholder="{{ block.settings.field_placeholder }}"
+                  autocomplete="{{ block.settings.field_name }}"
+                  data-rule="{{ block.settings.field_rule }}"
+                  data-field-width="{{ block.settings.field_width }}"
+                  data-field-width-md="{{ block.settings.field_width_md }}"
+                  data-field-width-lg="{{ block.settings.field_width_lg }}"
+                  {% if block.settings.field_required %}
+                    required="{{ block.settings.field_required }}"
+                  {% endif %}
+                >
+                </textarea>
+              {% when 'select' %}
+                <label for="{{ block.settings.field_name }}">
+                  {{ block.settings.field_label }}
+                  {% case block.settings.field_required %}
+                    {% when false %}
+                      <span>(Optional)</span>
+                  {% endcase %}
+                </label>
+                <select
+                  id="crmf-select-{{ block.settings.field_name }}"
+                  name="{{ block.settings.field_name }}"
+                  data-rule="{{ block.settings.field_rule }}"
+                  data-field-width="{{ block.settings.field_width }}"
+                  data-field-width-md="{{ block.settings.field_width_md }}"
+                  data-field-width-lg="{{ block.settings.field_width_lg }}"
+                  {% if block.settings.field_required %}
+                    required="{{ block.settings.field_required }}"
+                  {% endif %}
+                >
+                  {% assign select_options_string = block.settings.field_select_options %}
+                  {% assign select_options_key_value_pairs = select_options_string | remove: '{"' | remove: '}' | remove: '"' | split: ',' %}
+                  {% for pair in select_options_key_value_pairs %}
+                    {% assign select_option_key_value = pair | split: ':' %}
+                    {% assign select_option_key = select_option_key_value[0] %}
+                    {% assign select_option_value = select_option_key_value[1] %}
+                    {% if select_option_key == 'default' %}
+                      <option value="">{{ select_option_value }}</option>
+                    {% else %}
+                      <option value="{{ select_option_key }}">{{ select_option_value }}</option>
+                    {% endif %}
+                  {% endfor %}
+                </select>
             {% endcase %}
           </div>
       {% endcase %}
@@ -39,7 +94,7 @@
   </div>
   <button class="crmf-button-submit" type="submit">{{ section.settings.form_button_submit_label }}</button>
 </form>
-<link rel="stylesheet" href="{{ 'check-rule-mate-form.css' | asset_url }}" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="{{ 'check-rule-mate-form.css' | asset_url }}">
 <script defer src="{{ 'check-rule-mate-form-helpers.js' | asset_url }}"></script>
 <script defer src="{{ 'check-rule-mate-form.js' | asset_url }}"></script>
 
@@ -181,13 +236,18 @@
         },
         {
           "type": "text",
+          "id": "field_checkbox_label",
+          "label": "Checkbox label (only checkboxes)"
+        },
+        {
+          "type": "text",
           "id": "field_select_default_option",
           "label": "The default option for select fields (only select fields)"
         },
         {
-          "type": "text",
-          "id": "field_checkbox_label",
-          "label": "Checkbox label (only checkboxes)"
+          "type": "textarea",
+          "id": "field_select_options",
+          "label": "Selectbox options"
         }
       ]
     },
